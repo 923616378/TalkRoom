@@ -28,7 +28,7 @@ li{
 
 }
 .must span{
-    display: none;
+    display: inline-block;
     width: 170px;
     text-align: left;
     margin-left: 20px;

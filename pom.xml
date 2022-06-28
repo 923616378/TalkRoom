@@ -19,25 +19,25 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>5.3.20</version>
+            <version>5.0.5.RELEASE</version>
         </dependency>
         <!--    spring-web-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>5.3.20</version>
+            <version>5.0.5.RELEASE</version>
         </dependency>
         <!--    springMVC-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>5.3.20</version>
+            <version>5.0.5.RELEASE</version>
         </dependency>
         <!--    spring事务-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>5.3.20</version>
+            <version>5.0.5.RELEASE</version>
         </dependency>
         <!--        AOP-->
         <dependency>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>5.3.20</version>
+            <version>5.0.5.RELEASE</version>
         </dependency>
         <!--        spring整合Mybatis-->
         <dependency>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>5.3.20</version>
+            <version>5.0.5.RELEASE</version>
         </dependency>
         <!--            Junit-->
         <dependency>
@@ -80,12 +80,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-websocket</artifactId>
-            <version>5.3.20</version>
+            <version>5.0.5.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-messaging</artifactId>
-            <version>5.3.20</version>
+            <version>5.0.5.RELEASE</version>
         </dependency>
         <!--        Servlet-->
         <dependency>

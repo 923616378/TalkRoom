@@ -1,37 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-     <!-- 清除样式 -->
-   <link rel="stylesheet" href="css/base.css">
-   <!-- login.css -->
-   <link rel="stylesheet" href="css/register.css">
-   <!-- jquery -->
+    <!-- 清除样式 -->
+    <link rel="stylesheet" href="css/base.css">
+    <!-- register.css -->
+    <link rel="stylesheet" href="css/register.css">
+    <!-- jquery -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
 </head>
+
 <body>
     <form class="rgisterFrom">
         <h1>注册</h1>
         <ul>
             <li class="must">
                 <label for="name">用户名:</label>
-                <input type="text" id="name">
-                <span class="tip">用户名已存在!</span>
+                <input type="text" id="name" placeholder="3-9个字符,包含数字字母">
+                <span class="tip"></span>
             </li>
             <li class="must">
                 <label for="pwd">密码:</label>
-                <input type="text" id="pwd">
-                <span class="tip">密码格式错误</span>
+                <input type="text" id="pwd" placeholder="3-12个字符, 包含字母数字">
+                <span class="tip"></span>
             </li>
             <li class="must">
                 <label for="pwd2">确认密码:</label>
-                <input type="text" id="pwd2">
-                <span class="tip">与原密码不符</span>
+                <input type="text" id="pwd2" placeholder="3-12个字符, 包含字母数字">
+                <span class="tip"></span>
             </li>
-            <li class="register"><button >注册</button></li>
+            <li class="register"><button>注册</button></li>
         </ul>
     </form>
+    <script>
+        /**
+         *  用户名 3-9个字符,包含数字字母
+         *  密码 3-10个字符, 包含字母数字符号, 不能有中文
+         */
+        //表单验证函数
+        function verify() { // 获取用户名和密码是否符合格式
+            var pwdReg = new RegExp("^[0-9a-zA-Z]{3,12}$");
+            var usrReg = new RegExp("^[0-9a-zA-Z]{3,9}$");
+            //获取账号和密码
+            var username = $("#name").val();
+            var password = $("#pwd").val();
+            var password2 = $("#pwd2").val();
+            //判断是否符合规则
+            var userResult = usrReg.test(username);
+            var pwdResult = pwdReg.test(username);
+            var isSame = true; //两次密码是否相等
+            //用户名不符合规则
+            if (!userResult) {
+                console.log("111")
+                //设置用户名不符合规则提示
+                console.log($("#name").siblings(".tip").text("用户名不符合规则!"))
+            }
+            if (!pwdResult) { //密码1不符合规则
+                console.log("222")
+                //设置密码不符合规则提示
+                $("#pwd").siblings(".tip").text("密码不符合规则!")
+            } else if (password !== password2) //密码1符合规则, 但是密码2不等于密码1
+            {
+                console.log("333")
+                //设置密码不符合规则提示
+                $("#pwd2").siblings(".tip").text("两次密码不一样!")
+                //不相等
+                isSame = false;
+            }
+            return userResult && pwdResult && isSame;
+        }
+        //发送Ajax请求 get, 判断用户名是否已经存在
+        function isUserNameExist() {
+            var isExist;
+            $.ajax({
+                //url
+                url: "/TalkRoom/user/userIsExist",
+                //方式
+                type: "GET",
+                //请求数据
+                data: "username="+ $("#name").val(),
+                //成功访问
+                success: function (data) {
+                    if(data === "true")
+                    {
+                        //用户已经存在!
+                        isExist = true
+                    }else{
+                        //用户名可用 未存在
+                        isExist = false;
+                    }
+                },
+                //访问失败时的回调函数
+                error: function () {
+                    console.log("请求出错!");
+                }
+            });
+            return isExist;
+        }
+        //入口函数 
+        $(function () {
+            //给注册按钮绑定点击按钮
+            $(".register button").on("click", function (event) {
+                //阻止表单中按钮的默认行为,比如说点击后会自动刷新页面
+                event.preventDefault();
+                //前段表单验证函数
+                //发送Ajax请求 get, 判断用户名是否已经存在
+                if (verify() && isUserNameExist()) //如果都满足条件,发送注册请求
+                {
+                    $.ajax({
+                        //url
+                        url: "/TalkRoom/user/register",
+                        //方式
+                        type: "POST",
+                        //请求数据
+                        data: {
+                            username: $("#name").val(),
+                            password: $("#pwd").val(),
+                        },
+                        //成功发送注册请求
+                        success: function (data) {
+                            console.log("注册成功!");
+                        },
+                        //访问失败时的回调函数
+                        error: function () {
+                            console.log("注册请求出错!");
+                        }
+                    })
+                }
+            })
+        })
+    </script>
 </body>
+
 </html>
