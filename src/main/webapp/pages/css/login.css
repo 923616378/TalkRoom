@@ -11,6 +11,7 @@
     box-shadow: 0px 0px 4px -1px
 }
 .loginFrom h1{
+    margin-top: 30px;
     text-align: center;
 }
 li{
@@ -35,7 +36,7 @@ li{
     margin-left: 20px;
 }
 .select{
-    margin-left: 190px;
+    margin-left: 210px;
 }
 .login{
     margin-left: 260px;
