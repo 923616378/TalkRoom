@@ -1,4 +1,4 @@
-.window{
+.window {
     position: absolute;
     width: 1000px;
     height: 800px;
@@ -7,47 +7,60 @@
     left: 50%;
     margin-top: -400px;
     margin-left: -500px;
-    border: 1px solid red;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 6px 0px;
+    /* 圆角 */
+    border-radius: 30px;
+    /* 溢出 */
+    overflow: hidden;
 }
-.aside{
+
+.aside {
     float: left;
     width: 200px;
     height: 800px;
     background-color: green;
 }
-.aside .me{
+
+.aside .me {
     position: relative;
     width: 200px;
     height: 100px;
-    background-color:cadetblue;
+    background-color: cadetblue;
 }
-.aside .myFriend{
+
+.aside .myFriend {
     width: 200px;
     height: 700px;
-    background-color:white;
+    background-color: white;
 }
-.box{
+
+.box {
     float: left;
     width: 800px;
     height: 800px;
     background-color: white;
 }
-.box .header{
+
+.box .header {
     width: 800px;
     height: 100px;
     background-color: yellow;
 }
-.box .talk-window{
+
+.box .talk-window {
     width: 800px;
     height: 500px;
-    background-color: gray;
 }
-.box .input-window{
+
+.box .input-window {
+    position: relative;
     width: 800px;
     height: 200px;
     background-color: aqua;
 }
-.userImg{
+
+.userImg {
     position: absolute;
     width: 50px;
     height: 50px;
@@ -56,7 +69,8 @@
     left: 50%;
     margin-left: -25px;
 }
-.user{
+
+.user {
     position: absolute;
     width: 200px;
     top: 79px;
@@ -65,16 +79,35 @@
     margin-left: -100px;
     background-color: red;
 }
+
 /* 用户和好友样式设置 */
-#userMsg,.friendMsg{
+#userMsg,
+.friendMsg {
     cursor: pointer;
 }
-.friend{
+
+.friendtitle {
+    text-align: center;
+    height: 30px;
+    color: green;
+    border: 1px solid green;
+    line-height: 30px;
+}
+
+.Friends {
     width: 200px;
+    height: 670px;
+    background-color: pink;
+    overflow: auto;
+}
+
+.friend {
+    width: 181px;
     height: 50px;
     border-bottom: 1px solid red;
 }
-.friendImg{
+
+.friendImg {
     float: left;
     width: 40px;
     height: 40px;
@@ -83,20 +116,91 @@
     margin-top: 5px;
     border: 1px solid red;
 }
-.friend .friendMsg{
+
+.friend .friendMsg {
     float: left;
     margin-left: 10px;
     line-height: 50px;
 }
-.mask{
+
+.mask {
     display: none;
 }
-.offline .mask{
+
+.offline .mask {
     display: block;
     position: relative;
     top: 0px;
     left: 0px;
-    width: 200px;
+    width: 181px;
     height: 50px;
     background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* 输入框部分样式 */
+#message-input {
+    width: 100%;
+    height: 100%;
+    /* 去除边框 */
+    outline: none;
+    /* 去除三角 */
+    resize: none;
+    font-size: 20px;
+    color: black;
+    border: 0px;
+    border-top: 1px solid #ebebeb;
+
+}
+
+#msgSendBtn {
+    position: absolute;
+    top: 150px;
+    right: 50px;
+    width: 100px;
+    height: 40px;
+    background-color: skyblue;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 1px 5px 0px
+}
+
+/* 用户消息部分布局 */
+.messages{
+    width: 800px;
+    height: 500px;
+    overflow: auto;
+}
+.now-time {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.headImg {
+    width: 40px;
+    height: 40px;
+    border: 1px solid black;
+    border-radius: 20px;
+}
+
+.message {
+    position: relative;
+    top: -30px;
+    left: 50px;
+    /* todo js代码动态设置宽度 */
+    width: fit-content;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(18, 183, 245);
+}
+
+.myself .headImg {
+    position: relative;
+    display: inline-block;
+    top: 0px;
+    right: -755px;
+}
+
+.msg.myself .message {
+    left: -50px;
+    /* 向左增长 */
+    margin: 0 0 0 auto;
 }
