@@ -27,14 +27,9 @@ button {
 }
 
 a {
-  color: #666;
+  color: black;
   text-decoration: none;
 }
-
-a:hover {
-  color: #c81623;
-}
-
 button,
 input {
   /* "\5B8B\4F53" 就是宋体的意思 这样浏览器兼容性比较好 */
