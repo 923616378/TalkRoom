@@ -1,17 +1,29 @@
 package com.snake.pojo;
 
+import java.util.List;
+
 public class User {
     private int uid;
     private String username;
     private String password;
+    private List<User> friends;
 
     public User() {
     }
 
-    public User(int uid, String username, String password) {
+    public User(int uid, String username, String password, List<User> friends) {
         this.uid = uid;
         this.username = username;
         this.password = password;
+        this.friends = friends;
+    }
+
+    public List<User> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<User> friends) {
+        this.friends = friends;
     }
 
     public int getUid() {
@@ -44,6 +56,7 @@ public class User {
                 "uid=" + uid +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", friends=" + friends +
                 '}';
     }
 }

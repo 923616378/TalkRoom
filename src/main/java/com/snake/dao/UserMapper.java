@@ -3,6 +3,8 @@ package com.snake.dao;
 import com.snake.pojo.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserMapper {
     /**
@@ -20,4 +22,11 @@ public interface UserMapper {
      * @return
      */
     int insertUser(User user);
+
+    /**
+     * 查询用户的好友的信息
+     * @param id
+     * @return
+     */
+    List<User> findUserFriendsByUid(int id);
 }

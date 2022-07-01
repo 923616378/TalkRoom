@@ -148,8 +148,6 @@
             <version>2.9.0</version>
         </dependency>
     </dependencies>
-
-
     <build>
     <finalName>TalkRoom</finalName>
     <pluginManagement>
@@ -158,6 +156,9 @@
           <plugin>
               <groupId>org.apache.tomcat.maven</groupId>
               <artifactId>tomcat7-maven-plugin</artifactId>
+              <configuration>
+                  <uriEncoding>UTF-8</uriEncoding>
+              </configuration>
               <version>2.2</version>
           </plugin>
       </plugins>

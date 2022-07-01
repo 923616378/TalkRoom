@@ -1,15 +1,23 @@
 package com.snake.controller;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snake.pojo.User;
 import com.snake.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -60,10 +68,26 @@ public class UserController {
      */
     @RequestMapping(value = "/userLogin",produces = {"text/html;charset=utf-8"})
     @ResponseBody
-    public String userLogin(User user){
+    public String userLogin(User user, HttpServletResponse response, HttpSession httpSession) throws JsonProcessingException {
         logger.info("登录用户名是:" + user.getUsername());
         logger.info("登录密码是:" + user.getPassword());
         User loginResult = userService.findUserByUser(user);
-        return "{\"isExist\":" + (loginResult != null) + "}"; //true代表用户存在, false 代表不存在
+        boolean isExist = loginResult != null;
+        //如果用户存在,保存到域中
+        if (isExist){
+            httpSession.setAttribute("user",loginResult);
+        }
+        return Boolean.toString(isExist); //true代表用户存在, false 代表不
+    }
+
+    /**
+     *2022年7月1日15:37:29
+     * @param httpSession 用于获取保存在域中的数据
+     * @return 返回当前登录用户
+     */
+    @RequestMapping("/getCurrentUser")
+    @ResponseBody
+    public User getCurrentUser(HttpSession httpSession){
+        return (User) httpSession.getAttribute("user");
     }
 }

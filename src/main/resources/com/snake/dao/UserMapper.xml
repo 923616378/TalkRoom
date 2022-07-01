@@ -5,9 +5,7 @@
     <insert id="insertUser" parameterType="user">
         insert User(username,password) Values(#{username},#{password})
     </insert>
-    <!--
-        查找用户
-    -->
+<!--    查询用户-->
     <select id="findUserByUser" parameterType="user" resultType="user">
         SELECT uid,username,password FROM User
         <where>
@@ -26,4 +24,10 @@
         </where>
     </select>
 
+    <!--
+        查找的好友,一个用户可能有多个好友
+    -->
+    <select id="findUserFriendsByUid" resultType="user">
+        SELECT uid,username FROM User u,Friend f where ((f.uid1 =#{uid} and f.uid2 = u.uid ) OR (f.uid1 = u.uid and f.uid2 = #{uid}));
+    </select>
 </mapper>
