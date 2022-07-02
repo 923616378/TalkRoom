@@ -19,6 +19,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class MyWebSocketHandler extends TextWebSocketHandler {
     //记录日志
@@ -69,7 +70,15 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
                     logger.info("保存数据成功!");
                     //将里面的数据转发给对应的用户
                     //根据接受者uid,获取session
+                    logger.info("发送给"+message1.getReceiverId());
                     WebSocketSession webSocketSession = sessions.get(message1.getReceiverId());
+                    //输出所有会话
+                    Set<Integer> integers = sessions.keySet();
+                    logger.info("当前会话列表:");
+                    for (Integer integer : integers) {
+                        logger.info(sessions.get(integer));
+                    }
+                    logger.info("输出完毕.");
                     //封装数据 消息类型 1,上线者id
                     logger.info(JSON.toJsonString(message1));
                     TextMessage textMessage = new TextMessage(JSON.toJsonString(message1));

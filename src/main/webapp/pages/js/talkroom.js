@@ -1,7 +1,7 @@
 $(function () {
     //全局websocket对象
     var websocket = null;
-    //全局用户变量,存储用户和好友信息
+    //全局用户变量,存储用户和好友信息和发送的消息
     var user = {};
     //全局聊天对象, 初始状态聊天对象为自己
     var talkObj = {
@@ -53,7 +53,7 @@ $(function () {
     //给好友栏绑定点击事件,通过事件委托的方式
     $(".Friends").on("click",".friend",function(){
         //更改当前li的id
-        talkObj.uid = $(this).index();
+        talkObj.index = $(this).index();
         console.log(talkObj);
         //1. 当点击还有栏时,清空消息栏里面的所有li
             $(".messages").empty();
@@ -63,16 +63,18 @@ $(function () {
     //给发送按钮绑定点击事件
     $("#msgSendBtn").on("click",function(){
         //获取当前点击li的id
-        var index =  talkObj.uid;
+        var index =  talkObj.index;
         console.log(index);
-        var uid = user.friends[index].uid;
+        console.log(user.friends);
+        talkObj.uid = user.friends[index].uid;
+
         //获取文本域消息
         var sendMsg = $("#message-input").val();
-        console.log("索引id:"+index," uid:"+uid," 待发送消息:"+sendMsg)
+        console.log("索引id:"+index," uid:"+talkObj.uid," 待发送消息:"+sendMsg)
         //如果消息不为控才能发送,弹出消息不能为空的提示
         if(sendMsg != ""){
             //封装成消息对象
-            var msg = new Message(1,sendMsg,uid);
+            var msg = new Message(1,sendMsg,talkObj.uid);
             console.log(msg);
             //使用websocket发送, 转化为JSON对象
             console.log("json格式:"+JSON.stringify(msg));
@@ -101,6 +103,8 @@ $(function () {
     //接收到消息的回调方法
     websocket.onmessage = function received(event) {
         console.log(event.data);
+        //将数据转换为对象
+        var message = JSON.parse(event.data);
     }
     //连接关闭的回调方法
     websocket.onclose = function () {
