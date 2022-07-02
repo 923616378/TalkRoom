@@ -34,5 +34,5 @@
 <!--
     导入spring-WebSocket配置文件
 -->
-<!--    <import resource="classpath:Spring-WebSocket.xml"/>-->
+    <import resource="classpath:Spring-WebSocket.xml"/>
 </beans>

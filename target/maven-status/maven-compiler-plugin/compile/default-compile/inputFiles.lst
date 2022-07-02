@@ -1,5 +1,14 @@
 C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\controller\UserController.java
+C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\service\Impl\MessageServiceImpl.java
+C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\pojo\Message.java
 C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\dao\UserMapper.java
-C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\pojo\User.java
 C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\service\Impl\UserServiceImpl.java
 C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\service\UserService.java
+C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\dao\MessageMapper.java
+C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\webSocket\handler\MyWebSocketHandler.java
+C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\webSocket\interceptor\HandshakeInterceptor.java
+C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\webSocket\socketConfig\MyWebSocketConfig.java
+C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\pojo\User.java
+C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\service\MessageService.java
+C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\Utils\JSON.java
+C:\Users\admin\IdeaProjects\TalkRoom\src\main\java\com\snake\pojo\MinMessage.java
