@@ -80,8 +80,8 @@ $(function () {
                     //遍历用户好友中是否存在该id
                     for (var i = 0; i < user.friends.length; i++) {
                         if (user.friends[i].uid === onlineUid) {
-                            //设置好友栏样式, 设置背景颜色为绿色,且移除类名
-                            $(".friend").eq(i).css("backgroundColor", "green").removeClass("offline");;
+                            //设置好友栏样式, 设置颜色为绿色,且移除类名
+                            $(".friend").eq(i).css("color", "green").removeClass("offline");;
                             break;
                         }
                     }
@@ -93,8 +93,8 @@ $(function () {
                     //遍历用户好友中是否存在该id
                     for (var i = 0; i < user.friends.length; i++) {
                         if (user.friends[i].uid === offlineUid) {
-                            //设置好友栏样式, 设置背景颜色为白色,且添加类名
-                            $(".friend").eq(i).css("backgroundColor", "white").addClass("offline");;
+                            //设置好友栏样式, 设置颜色为灰色,且添加类名
+                            $(".friend").eq(i).css("color", "gray").addClass("offline");;
                             break;
                         }
                     }
@@ -108,8 +108,8 @@ $(function () {
                         //如果ele为true,就设置对应索引的好友为上线
                         if(ele)
                         {
-                             //设置好友栏样式, 设置背景颜色为绿色,且移除类名
-                             $(".friend").eq(i).css("backgroundColor", "green").removeClass("offline");;
+                             //设置好友栏样式, 设置颜色为绿色,且移除类名
+                             $(".friend").eq(i).css("color", "green").removeClass("offline");;
                         }
                     })
                 }

@@ -138,6 +138,9 @@
     height: 50px;
     background-color: rgba(82, 76, 76, 0.4);
 }
+.offline .friend{
+    color: gray;
+}
 
 /* 输入框部分样式 */
 #message-input {
