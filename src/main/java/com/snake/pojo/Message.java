@@ -17,7 +17,11 @@ public class Message extends MinMessage{
         this.mid = -1; //由数据库生成
         this.sendTime = new Date(); //设置为现在时间
     }
-
+    public Message(int mid,  int msgType,int senderId, int receiverId, String message,Date sendTime) {
+        super(senderId, msgType, message, receiverId);
+        this.mid = mid; //由数据库生成
+        this.sendTime = sendTime; //设置为现在时间
+    }
     public int getMid() {
         return mid;
     }

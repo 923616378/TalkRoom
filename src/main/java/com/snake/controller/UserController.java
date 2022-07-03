@@ -27,7 +27,6 @@ public class UserController {
     //注入UserService
     @Autowired
     private UserService userService;
-    //业务层数据
 
     /**
      * 2022年6月28日17:47:26
