@@ -11,11 +11,11 @@ $(function () {
     };
     //消息对象 消息类型,消息,接受者id
     //消息类型为1时, 代表这是发送给用户的信息
-    function Message(msgType,message,receiverId) {
+    function Message(msgType, message, receiverId) {
         this.senderId = user.uid, //发送者uid
-        this.msgType = msgType,
-        this.message = message,
-        this.receiverId = receiverId
+            this.msgType = msgType,
+            this.message = message,
+            this.receiverId = receiverId
     }
     //立刻执行函数
     (function load() {
@@ -33,6 +33,11 @@ $(function () {
             success: function (data) {
                 user = data;
                 talkObj.uid = user.uid;
+                //给每个好友添加消息数组
+                $.each(user.friends, function (i, ele) {
+                    ele.messageArrary = [];
+                })
+                console.log(user);
             },
             //失败方法
             error: function () {
@@ -49,41 +54,69 @@ $(function () {
             $(".Friends").append(li);
         })
     })();
-    function loadMsg(){};
+
+    //重新渲染页面
+    function loadPage(index) {
+        //1. 当点击好友栏时,清空消息栏里面的所有li
+        $(".messages").empty();
+        //2. 加载当前用户的所有聊天数据
+        $.each(user.friends[index].messageArrary, function (i, ele) {
+            //提取时间
+            var msgSendTime = new Date(ele.sendTime);
+            //拼接成指定格式的字符串 2022/7/1 12:10:33 月份是11进制的,真实的月份要加1
+            var timeStr = msgSendTime.getFullYear() + "/" + (msgSendTime.getMonth() + 1) + "/" + msgSendTime.getDate() + " "
+                + msgSendTime.getHours() + ":" + msgSendTime.getMinutes() + ":" + msgSendTime.getSeconds();
+            console.log(timeStr);
+            //获取头像url
+            var headImgUrl = "img/头像.jpg"
+            //判断用户是发送者还是接受者
+            var who = user.uid === ele.senderId ? "myself" : "him";
+            //创建li
+            var li = $("<li class='msg " + who + "'><div class='now-time'>" + timeStr + "</div>" +
+                "<img src=" + headImgUrl + " class='headImg'>" +
+                "<div class='message'>" + ele.message + "</div></li>");
+            //将li添加到
+            $(".messages").append(li);
+            //设置滚动条到最底部
+            var messages = $(".messages")[0];
+            messages.scrollTop = messages.scrollHeight;
+            
+        })
+    }
     //给好友栏绑定点击事件,通过事件委托的方式
-    $(".Friends").on("click",".friend",function(){
+    $(".Friends").on("click", ".friend", function () {
         //更改当前li的id
         talkObj.index = $(this).index();
         console.log(talkObj);
-        //1. 当点击还有栏时,清空消息栏里面的所有li
-            $(".messages").empty();
-        //2. 加载当前用户的所有聊天数据
-            loadMsg()
+        //重新渲染聊天信息窗口
+        loadPage(talkObj.index)
     })
     //给发送按钮绑定点击事件
-    $("#msgSendBtn").on("click",function(){
+    $("#msgSendBtn").on("click", function () {
         //获取当前点击li的id
-        var index =  talkObj.index;
+        var index = talkObj.index;
         console.log(index);
         console.log(user.friends);
         talkObj.uid = user.friends[index].uid;
 
         //获取文本域消息
         var sendMsg = $("#message-input").val();
-        console.log("索引id:"+index," uid:"+talkObj.uid," 待发送消息:"+sendMsg)
-        //如果消息不为控才能发送,弹出消息不能为空的提示
-        if(sendMsg != ""){
+         //处理字符串,在适当位置插入换行符
+         sendMsg = msgHandle(sendMsg);
+        console.log("索引id:" + index, " uid:" + talkObj.uid, " 待发送消息:" + sendMsg)
+        //如果消息不为空才能发送,弹出消息不能为空的提示
+        if (sendMsg != "") {
             //封装成消息对象
-            var msg = new Message(1,sendMsg,talkObj.uid);
+            var msg = new Message(1, sendMsg, talkObj.uid);
             console.log(msg);
             //使用websocket发送, 转化为JSON对象
-            console.log("json格式:"+JSON.stringify(msg));
+            console.log("json格式:" + JSON.stringify(msg));
             websocket.send(JSON.stringify(msg));
-        }else{
+        } else {
 
         }
-       
-
+        //清空输入文本域
+        $("#message-input").val("");
     })
     //获取webSocket 判断当前浏览器是否支持WebSocket
     if ('WebSocket' in window) {
@@ -105,6 +138,45 @@ $(function () {
         console.log(event.data);
         //将数据转换为对象
         var message = JSON.parse(event.data);
+        //判断消息类型
+        switch (message.msgType) {
+            case 1: //消息类型为用户发送给用户的信息
+                {
+                    //获取发送者id
+                    var senderId = message.senderId;
+                    //根据发送id获取friends的索引
+                    var friendIndex = null;
+                    for (var i = 0; i < user.friends.length; i++) {
+                        if (user.friends[i].uid === senderId) {
+                            friendIndex = i;
+                        }
+                    }
+                    //将message存储到friends数组中
+                    user.friends[friendIndex].messageArrary.push(message);
+                    //重新渲染聊天窗口函数
+                    loadPage(friendIndex)
+                }
+                break;
+            case 2: //消息类型为服务器发送的 确认收到消息
+                {
+                    //添加新的message到messageArrary数组
+                    //获取接受者id
+                    var receiverId = message.receiverId;
+                    //根据发送id获取friends的索引
+                    var friendIndex = null;
+                    for (var i = 0; i < user.friends.length; i++) {
+                        if (user.friends[i].uid === receiverId) {
+                            friendIndex = i;
+                        }
+                    }
+                    //将message存储到friends数组中
+                    user.friends[friendIndex].messageArrary.push(message);
+                    //重新渲染聊天窗口函数
+                    loadPage(friendIndex)
+                }
+                break;
+        }
+
     }
     //连接关闭的回调方法
     websocket.onclose = function () {
@@ -116,4 +188,32 @@ $(function () {
     }
 
 
+    //插入字符串
+    function insertStr(source, start, newStr) {
+        return source.slice(0, start) + newStr + source.slice(start);
+    }
+    //判断消息中,数字和字母和汉字的个数
+    function msgHandle(str) {
+        var str2 = str;
+        var OtherNum = 0;
+        var chineseNum = 0 //汉字个数
+        var brNum = 0; //插入的换行符个数
+        var reg = new RegExp("[\\u4E00-\\u9FFF]");
+        for (var i = 0; i < str.length; i++) {
+            console.log(str[i]);
+            if (reg.test(str[i])) {
+                chineseNum++
+            } else {
+                OtherNum++
+            }
+            if (OtherNum * 12 + chineseNum * 20 >= 680) {
+                //在字符串中插入换行符
+                str2 = insertStr(str2, brNum * 4 + i + 1, "<br>")
+                OtherNum =0;
+                chineseNum = 0;
+                brNum++;
+            }
+        }
+        return str2;
+    }
 }) 

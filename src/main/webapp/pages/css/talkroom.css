@@ -172,6 +172,8 @@
     height: 500px;
     overflow: auto;
     border-left: 1px solid rgb(235, 235, 235);
+    /* 设置文字大小 */
+    font-size: 20px;
 }
 
 .now-time {

@@ -71,7 +71,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
                     //将里面的数据转发给对应的用户
                     //根据接受者uid,获取session
                     logger.info("发送给"+message1.getReceiverId());
-                    WebSocketSession webSocketSession = sessions.get(message1.getReceiverId());
+                    WebSocketSession ReceiverSession = sessions.get(message1.getReceiverId());
                     //输出所有会话
                     Set<Integer> integers = sessions.keySet();
                     logger.info("当前会话列表:");
@@ -83,7 +83,12 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
                     logger.info(JSON.toJsonString(message1));
                     TextMessage textMessage = new TextMessage(JSON.toJsonString(message1));
                     //给它发送消息
-                    webSocketSession.sendMessage(textMessage);
+                    ReceiverSession.sendMessage(textMessage);
+                    //给发送者发送远消息,消息类型改为2
+                    WebSocketSession SenderSession = sessions.get(message1.getSenderId());
+                    message1.setMsgType(2);
+                    TextMessage textMessage2 = new TextMessage(JSON.toJsonString(message1));
+                    SenderSession.sendMessage(textMessage2);
                 } else {
                     logger.info("保存数据失败!");
                 }
