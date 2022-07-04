@@ -295,3 +295,16 @@ audio{
     width: 200px;
     height: 20px;
 }
+/* 修改个人信息框 */
+.updateSelfMsg{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    width: 800px;
+    height: 500px;
+    margin-left: -300px;
+    margin-top: -300px;
+    background-color: rgba(222,225,235, 0.4);
+    /* background-color: pink; */
+    z-index: 4;
+}

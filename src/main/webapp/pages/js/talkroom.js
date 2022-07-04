@@ -269,8 +269,12 @@ $(function () {
         var index = talkObj.index;
         console.log(index);
         console.log(user.friends);
+        if(talkObj.index === -1) //如果用户未点击,聊天用户,弹出提示框
+        {
+            alert("请先选择一名聊天用户!");
+            return;
+        }
         talkObj.uid = user.friends[index].uid;
-
         //获取文本域消息
         var sendMsg = $("#message-input").val();
         //处理字符串,在适当位置插入换行符
@@ -290,5 +294,9 @@ $(function () {
         //清空输入文本域
         $("#message-input").val("");
     })
-
+    //用户名点击事件
+    $("#userMsg").on("click",function(){
+        //弹出个人信息页面
+        
+    })
 }) 

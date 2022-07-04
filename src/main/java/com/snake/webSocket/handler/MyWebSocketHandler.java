@@ -23,12 +23,13 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
     //记录日志
     private final Logger logger = Logger.getLogger(MyWebSocketHandler.class);
     // 保存所有的用户session uid对应回话
-    private final Map<Integer,WebSocketSession> sessions = new HashMap<>();
+    private final Map<Integer, WebSocketSession> sessions = new HashMap<>();
     // 存储所有用户
-    private final Map<Integer,User> Users = new HashMap<>();
+    private final Map<Integer, User> Users = new HashMap<>();
     //注入 消息服务
     @Autowired
     private MessageService messageService;
+
     /**
      * 新用户连接时调用的方法
      */
@@ -39,19 +40,19 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
         Map<String, Object> attributes = session.getAttributes();
         HttpSession httpSession = (HttpSession) attributes.get("currHttpSession");
         //获取登录用户信息
-        User user = (User)httpSession.getAttribute("user");
-        logger.info("当前用户uid:"+user.getUid());
+        User user = (User) httpSession.getAttribute("user");
+        logger.info("当前用户uid:" + user.getUid());
         //给所有已经在线用户发送上线人员的uid
         Set<Integer> allOnlineUid = sessions.keySet();
         for (Integer uid : allOnlineUid) {
             WebSocketSession webSocketSession = sessions.get(uid);
             //发送上线人员id 消息格式 {"msgType:3","onlineUid":uid}
-            webSocketSession.sendMessage(new TextMessage("{\"msgType\":3,\"onlineUid\":"+user.getUid()+"}"));
+            webSocketSession.sendMessage(new TextMessage("{\"msgType\":3,\"onlineUid\":" + user.getUid() + "}"));
         }
         //将登录用户的uid作为键,存放到sessions集合
-        sessions.put(user.getUid(),session);
+        sessions.put(user.getUid(), session);
         //将session的id作为键,存放到User集合
-        Users.put(Integer.parseInt(session.getId()),user);
+        Users.put(Integer.parseInt(session.getId()), user);
         //发送连接成功确认消息
         session.sendMessage(new TextMessage("{\"msgType\":6}"));
     }
@@ -61,14 +62,13 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-        logger.info("接收到消息:"+message.getPayload());
+        logger.info("接收到消息:" + message.getPayload());
         //json转换器
         ObjectMapper objectMapper = new ObjectMapper();
         //将数据转换为JSON对象
-        MinMessage msg =objectMapper.readValue((String)message.getPayload(),MinMessage.class);
+        MinMessage msg = objectMapper.readValue((String) message.getPayload(), MinMessage.class);
         //判断消息类型
-        switch(msg.getMsgType())
-        {
+        switch (msg.getMsgType()) {
             //消息类型1 用户发送给用户的信息
             case 1:
                 //将minMessage封装为Message类型
@@ -80,20 +80,16 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
                     logger.info("保存数据成功!");
                     //将里面的数据转发给对应的用户
                     //根据接受者uid,获取session
-                    logger.info("发送给"+message1.getReceiverId());
+                    logger.info("发送给" + message1.getReceiverId());
                     WebSocketSession ReceiverSession = sessions.get(message1.getReceiverId());
-                    //输出所有会话
-                    Set<Integer> integers = sessions.keySet();
-                    logger.info("当前会话列表:");
-                    for (Integer integer : integers) {
-                        logger.info(sessions.get(integer));
+                    //如果用户在线才给对方发送消息
+                    if (ReceiverSession != null) {
+                        //封装数据 消息类型 1,上线者id
+                        logger.info(JSON.toJsonString(message1));
+                        TextMessage textMessage = new TextMessage(JSON.toJsonString(message1));
+                        //给对方发送消息
+                        ReceiverSession.sendMessage(textMessage);
                     }
-                    logger.info("输出完毕.");
-                    //封装数据 消息类型 1,上线者id
-                    logger.info(JSON.toJsonString(message1));
-                    TextMessage textMessage = new TextMessage(JSON.toJsonString(message1));
-                    //给它发送消息
-                    ReceiverSession.sendMessage(textMessage);
                     //给发送者发送远消息,消息类型改为2
                     WebSocketSession SenderSession = sessions.get(message1.getSenderId());
                     message1.setMsgType(2);
@@ -104,8 +100,8 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
                 }
                 break;
             case 2: //用户获取所有上线人员的请求
-                logger.info("1会话号为:"+session.getId());
-                logger.info("2会话号为:"+sessions.get(msg.getSenderId()).getId());
+                logger.info("1会话号为:" + session.getId());
+                logger.info("2会话号为:" + sessions.get(msg.getSenderId()).getId());
                 //获取登录用户的会哈
                 User user = Users.get(Integer.parseInt(session.getId()));
                 List<User> friends = user.getFriends();
@@ -113,13 +109,13 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
                 List<Boolean> lineStatus = new ArrayList<Boolean>();
                 //判断是否上线, 如果朋友uid在sessions中,就向数组中追加true,否则false
                 for (User friend : friends) {
-                    if (sessions.get(friend.getUid())!= null){
+                    if (sessions.get(friend.getUid()) != null) {
                         lineStatus.add(true);
-                    }else lineStatus.add(false);
+                    } else lineStatus.add(false);
                 }
-                logger.info("{\"msgType\":5,\"lineStatus\":"+JSON.toJsonString(lineStatus)+"}");
+                logger.info("{\"msgType\":5,\"lineStatus\":" + JSON.toJsonString(lineStatus) + "}");
                 //发送消息
-                session.sendMessage(new TextMessage("{\"msgType\":5,\"lineStatus\":"+JSON.toJsonString(lineStatus)+"}"));
+                session.sendMessage(new TextMessage("{\"msgType\":5,\"lineStatus\":" + JSON.toJsonString(lineStatus) + "}"));
                 break;
         }
         super.handleMessage(session, message);
@@ -141,7 +137,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
         for (Integer uid : allOnlineUid) {
             WebSocketSession webSocketSession = sessions.get(uid);
             //发送下线人员id 消息格式 {"msgType:4","offlineUid":uid}
-            webSocketSession.sendMessage(new TextMessage("{\"msgType\":4,\"offlineUid\":"+user.getUid()+"}"));
+            webSocketSession.sendMessage(new TextMessage("{\"msgType\":4,\"offlineUid\":" + user.getUid() + "}"));
         }
         //删除该用户的User
         Users.remove(Integer.parseInt(id));
